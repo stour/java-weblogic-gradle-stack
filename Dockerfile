@@ -1,10 +1,8 @@
-FROM oraclelinux:6
+FROM rhel
 
 # Environment variables required for Java and Weblogic
 # ----------------------------------------------------
-ENV JDK_VERSION 7u80-b15
-ENV JDK_ARCHIVE jdk-7u80-linux-x64.tar.gz
-ENV JAVA_HOME /opt/jdk1.7.0_80
+ENV JAVA_HOME /opt/jre1.8.0_65
 ENV CONFIG_JVM_ARGS -Djava.security.egd=file:/dev/./urandom
 
 ENV WLS_PKG wls1036_generic.jar
@@ -61,20 +59,15 @@ LABEL che:server:8080:ref=tomcat8 che:server:8080:protocol=http che:server:8000:
 COPY $SILENT_XML /home/user/
 COPY $WLS_PKG /home/user/
 
-# Install Oracle JDK 7
-# -------------------------------------
-RUN wget \
-    --no-cookies \
-    --no-check-certificate \
-    --header "Cookie: oraclelicense=accept-securebackup-cookie" \
-    -qO - \
-    "http://download.oracle.com/otn-pub/java/jdk/$JDK_VERSION/$JDK_ARCHIVE" | sudo tar -zx -C /opt/
-
 # Install Maven
 # -------------------------------------
 RUN mkdir /home/user/apache-maven-$MAVEN_VERSION && \
     wget -qO - "http://apache.ip-connect.vn.ua/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz" \
     | tar -zx --strip-components=1 -C /home/user/apache-maven-$MAVEN_VERSION
+
+# Install Gradle
+# -------------------------------------
+
 
 # Install Weblogic
 # -------------------------------------
@@ -90,10 +83,11 @@ RUN cd $MW_HOME/wlserver/server/bin && ./setWLSEnv.sh
 
 # Cache Maven dependencies of a given project (EXAMPLE with console-java-simple)
 # ------------------------------------------------------------------------------
-RUN mkdir /tmp/console-java-simple && \
-    cd /tmp/console-java-simple && \
-    svn checkout https://github.com/stour/console-java-simple/trunk . && \
-    mvn dependency:sources
+#RUN mkdir /tmp/console-java-simple && \
+#    cd /tmp && \
+#    git clone https://github.com/stour/console-java-simple.git && \
+#    cd /tmp/console-java-simple && \
+#    mvn dependency:sources
 
 # Define default command to start bash
 # -------------------------------------
