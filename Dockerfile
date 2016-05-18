@@ -14,7 +14,11 @@ ENV LD_LIBRARY_PATH $LD_LIBRARY_PATH:/home/user/weblogic/wlserver/server/native/
 
 ENV MAVEN_VERSION=3.2.5
 ENV M2_HOME=/home/user/apache-maven-$MAVEN_VERSION
-ENV PATH=$JAVA_HOME/bin:$M2_HOME/bin:$PATH
+
+ENV GRADLE_VERSION=2.13
+ENV GRADLE_HOME=/home/user/gradle-$GRADLE_VERSION
+
+ENV PATH=$GRADLE_HOME/bin:$JAVA_HOME/bin:$M2_HOME/bin:$PATH
 
 ENV JRE_VERSION_WS_AGENT=8u65-b17
 ENV JRE_ARCHIVE_WS_AGENT=jre-8u65-linux-x64.tar.gz
@@ -54,11 +58,6 @@ USER user
 
 LABEL che:server:8080:ref=tomcat8 che:server:8080:protocol=http che:server:8000:ref=tomcat8-debug che:server:8000:protocol=http
 
-# Copy package
-# -------------------------------------
-COPY $SILENT_XML /home/user/
-COPY $WLS_PKG /home/user/
-
 # Install Maven
 # -------------------------------------
 RUN mkdir /home/user/apache-maven-$MAVEN_VERSION && \
@@ -67,7 +66,14 @@ RUN mkdir /home/user/apache-maven-$MAVEN_VERSION && \
 
 # Install Gradle
 # -------------------------------------
+RUN wget -q "https://services.gradle.org/distributions/gradle-$GRADLE_VERSION-bin.zip" && \
+    unzip -oq gradle-$GRADLE_VERSION-bin.zip && \
+    rm gradle-$GRADLE_VERSION-bin.zip
 
+# Copy package
+# -------------------------------------
+COPY $SILENT_XML /home/user/
+COPY $WLS_PKG /home/user/
 
 # Install Weblogic
 # -------------------------------------
