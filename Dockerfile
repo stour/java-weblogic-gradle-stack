@@ -1,4 +1,4 @@
-FROM rhel
+FROM centos:latest
 
 # Environment variables required for Java and Weblogic
 # ----------------------------------------------------
