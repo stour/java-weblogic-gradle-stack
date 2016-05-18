@@ -47,7 +47,7 @@ RUN yum -y update && \
     -qO - \
    "http://download.oracle.com/otn-pub/java/jdk/$JRE_VERSION_WS_AGENT/$JRE_ARCHIVE_WS_AGENT" | tar -zx -C /opt/ && \
     echo -e "#! /bin/bash\nset -e\n" > /home/user/entrypoint.sh && \
-    echo -e "sudo /usr/bin/ssh-keygen -q -N \"\" -t rsa -f /etc/ssh/ssh_host_rsa_key\nsudo /usr/bin/ssh-keygen -q -N \"\" -t dsa -f /etc/ssh/ssh_host_dsa_key\nsudo /usr/bin/ssh-keygen -q -N \"\" -t ecdsa -f /etc/ssh/ssh_host_ecdsa_key\n" >> /home/user/entrypoint.sh && \
+    echo -e "sudo ssh-keygen -A" >> /home/user/entrypoint.sh && \
     echo -e "sudo /usr/sbin/sshd -D &\nexec \"\$@\"\n" >> /home/user/entrypoint.sh && \
     chmod a+x /home/user/entrypoint.sh
 
