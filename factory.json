@@ -1,0 +1,90 @@
+{
+  "v": "4.0",
+  "name": "java-weblogic-gradle-factory",
+  "workspace": {
+    "defaultEnv": "default",
+    "environments": [
+      {
+        "name": "default",
+        "machineConfigs": [
+          {
+            "limits": {
+              "ram": 3000
+            },
+            "name": "ws-machine",
+            "type": "docker",
+            "source": {
+              "location": "https://gist.githubusercontent.com/stour/c50e8d27c9fcee0d868103cf02beef40/raw/f7b4dbe96fc85d3bf3733341e6b2f2f610f7694e/Dockerfile",
+              "type": "recipe"
+            },
+            "dev": true,
+            "servers": [],
+            "envVariables": {},
+            "links": []
+          }
+        ]
+      }
+    ],
+    "projects": [],
+    "name": "default",
+    "commands": [
+      {
+        "commandLine":"([ -d $MW_HOME/user_projects/domains/base_domain ] && cd $MW_HOME/user_projects/domains/base_domain/bin && ./startWebLogic.sh) || (echo \\\"Domain base_domain does not exist.\\\")",
+        "name":"Weblogic :: start",
+        "attributes":{
+          "previewUrl":"http://${server.port.7001}"
+        },
+        "type":"custom"
+      },
+      {
+        "commandLine":"([ -d $MW_HOME/user_projects/domains/base_domain ] && cd $MW_HOME/user_projects/domains/base_domain/bin && ./stopWebLogic.sh) || (echo \\\"Domain base_domain does not exist.\\\")",
+        "name":"Weblogic :: stop",
+        "attributes":{
+          "previewUrl":""
+        },
+        "type":"custom"
+      },
+      {
+        "commandLine":"cd $MW_HOME/wlserver/common/bin && ./config.sh mode=console",
+        "name":"Weblogic :: create domain (interactive)",
+        "attributes":{
+          "previewUrl":""
+        },
+        "type":"custom"
+      },
+      {
+        "commandLine":"mvn -f ${current.project.path} clean compile findbugs:findbugs",
+        "name":"Findbugs :: report",
+        "attributes":{
+          "previewUrl":""
+        },
+        "type":"mvn"
+      },
+      {
+        "commandLine":"mvn -f ${current.project.path} clean compile checkstyle:checkstyle",
+        "name":"Checkstyle :: report",
+        "attributes":{
+          "previewUrl":""
+        },
+        "type":"mvn"
+      },
+      {
+        "commandLine":"mvn -f ${current.project.path} clean compile pmd:pmd",
+        "name":"PMD :: report",
+        "attributes":{
+          "previewUrl":""
+        },
+        "type":"mvn"
+      },
+      {
+        "commandLine":"mvn -f ${current.project.path} clean compile site",
+        "name":"Checkstyle & Findbugs & PMD :: report",
+        "attributes":{
+          "previewUrl":""
+        },
+        "type":"mvn"
+      }
+    ],
+    "links": []
+  }
+}
