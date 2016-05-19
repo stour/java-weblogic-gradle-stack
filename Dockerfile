@@ -3,14 +3,12 @@ FROM centos:latest
 # Environment variables required for Java and Weblogic
 # ----------------------------------------------------
 ENV JAVA_HOME /opt/jre1.8.0_65
-ENV CONFIG_JVM_ARGS -Djava.security.egd=file:/dev/./urandom
 
-ENV WLS_PKG wls1036_generic.jar
-ENV BEA_HOME /home/user/weblogic
-ENV MW_HOME /home/user/weblogic
-ENV SILENT_XML silent.xml
-ENV USER_MEM_ARGS -Xms256m -Xmx512m -XX:MaxPermSize=256m
-ENV LD_LIBRARY_PATH $LD_LIBRARY_PATH:/home/user/weblogic/wlserver/server/native/linux/x86_64
+ENV FMW_PKG=fmw_12.2.1.0.0_wls_Disk1_1of1.zip \
+    FMW_JAR=fmw_12.2.1.0.0_wls.jar \
+    ORACLE_HOME=/home/user/ \
+    USER_MEM_ARGS="-Djava.security.egd=file:/dev/./urandom" \
+    PATH=$PATH:/usr/java/default/bin:/u01/oracle/oracle_common/common/bin
 
 ENV MAVEN_VERSION=3.3.9
 ENV M2_HOME=/home/user/apache-maven-$MAVEN_VERSION
@@ -73,15 +71,13 @@ RUN wget -q "https://services.gradle.org/distributions/gradle-$GRADLE_VERSION-bi
 # Copy package
 # -------------------------------------
 COPY $SILENT_XML /home/user/
-COPY $WLS_PKG /home/user/
+COPY $FMW_PKG install.file oraInst.loc /home/user/
 
 # Install Weblogic
 # -------------------------------------
-RUN java -jar $WLS_PKG -mode=silent -silent_xml=$SILENT_XML && \
-    rm $WLS_PKG $SILENT_XML
-RUN ln -s /home/user/weblogic/wlserver_10.3 /home/user/weblogic/wlserver
-
-ENV PATH $PATH:/home/user/weblogic/oracle_common/common/bin
+RUN cd /home/user && $JAVA_HOME/bin/jar xf /home/user/$FMW_PKG && cd - && \
+    su -c "$JAVA_HOME/bin/java -jar /u01/$FMW_JAR -silent -responseFile /home/user/install.file -invPtrLoc /home/user/oraInst.loc -jreLoc $JAVA_HOME -ignoreSysPrereqs -force -novalidation ORACLE_HOME=$ORACLE_HOME INSTALL_TYPE=\"WebLogic Server\"" - oracle && \
+    rm /home/user/$FMW_JAR /home/user/$FMW_PKG /home/user/oraInst.loc /home/user/install.file
 
 # Set Weblogic environment
 # -------------------------------------
