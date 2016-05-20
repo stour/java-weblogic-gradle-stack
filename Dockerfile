@@ -70,9 +70,8 @@ RUN wget -q "https://services.gradle.org/distributions/gradle-$GRADLE_VERSION-bi
 
 # Copy package
 # -------------------------------------
-COPY $SILENT_XML /home/user/
 COPY $FMW_PKG /home/user/
-COPY install.file oraInst.loc /home/user/
+COPY $SILENT_XML install.file oraInst.loc /home/user/
 
 # Install Weblogic
 # -------------------------------------
