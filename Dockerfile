@@ -12,7 +12,7 @@ ENV SILENT_XML silent.xml
 ENV USER_MEM_ARGS -Xms256m -Xmx512m -XX:MaxPermSize=256m
 ENV LD_LIBRARY_PATH $LD_LIBRARY_PATH:/home/user/weblogic/wlserver/server/native/linux/x86_64
 
-ENV MAVEN_VERSION=3.2.5
+ENV MAVEN_VERSION=3.3.9
 ENV M2_HOME=/home/user/apache-maven-$MAVEN_VERSION
 
 ENV GRADLE_VERSION=2.13
@@ -61,7 +61,7 @@ LABEL che:server:8080:ref=tomcat8 che:server:8080:protocol=http che:server:8000:
 # Install Maven
 # -------------------------------------
 RUN mkdir /home/user/apache-maven-$MAVEN_VERSION && \
-    wget -qO - "http://apache.ip-connect.vn.ua/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz" \
+    wget -qO - "http://mirror.olnevhost.net/pub/apache/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz" \
     | tar -zx --strip-components=1 -C /home/user/apache-maven-$MAVEN_VERSION
 
 # Install Gradle
