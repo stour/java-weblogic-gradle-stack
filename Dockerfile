@@ -2,7 +2,7 @@ FROM centos:latest
 
 # Environment variables required for Java and Weblogic
 # ----------------------------------------------------
-ENV JAVA_HOME /opt/jre1.8.0_65
+ENV JAVA_HOME /opt/jdk1.8.0_65
 
 ENV FMW_PKG=fmw_12.2.1.0.0_wls_Disk1_1of1.zip \
     FMW_JAR=fmw_12.2.1.0.0_wls.jar \
@@ -19,7 +19,7 @@ ENV GRADLE_HOME=/home/user/gradle-$GRADLE_VERSION
 ENV PATH=$GRADLE_HOME/bin:$JAVA_HOME/bin:$M2_HOME/bin:$PATH
 
 ENV JRE_VERSION_WS_AGENT=8u65-b17
-ENV JRE_ARCHIVE_WS_AGENT=jre-8u65-linux-x64.tar.gz
+ENV JRE_ARCHIVE_WS_AGENT=jdk-8u65-linux-x64.tar.gz
 
 ENV TERM xterm
 ENV LANG C.UTF-8
@@ -75,8 +75,8 @@ COPY $SILENT_XML install.file oraInst.loc /home/user/
 
 # Install Weblogic
 # -------------------------------------
-RUN cd /home/user && $JAVA_HOME/bin/jar xf /home/user/$FMW_PKG && cd - && \
-    su -c "$JAVA_HOME/bin/java -jar /u01/$FMW_JAR -silent -responseFile /home/user/install.file -invPtrLoc /home/user/oraInst.loc -jreLoc $JAVA_HOME -ignoreSysPrereqs -force -novalidation ORACLE_HOME=$ORACLE_HOME INSTALL_TYPE=\"WebLogic Server\"" - oracle && \
+RUN cd /home/user && jar xf /home/user/$FMW_PKG && cd - && \
+    java -jar /home/user/$FMW_JAR -silent -responseFile /home/user/install.file -invPtrLoc /home/user/oraInst.loc -jreLoc $JAVA_HOME -ignoreSysPrereqs -force -novalidation ORACLE_HOME=$ORACLE_HOME INSTALL_TYPE="WebLogic Server" && \
     rm /home/user/$FMW_JAR /home/user/$FMW_PKG /home/user/oraInst.loc /home/user/install.file
 
 # Set Weblogic environment
