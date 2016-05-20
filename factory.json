@@ -29,7 +29,7 @@
     "name": "default",
     "commands": [
       {
-        "commandLine":"([ -d $ORACLE_HOME/user_projects/domains/base_domain ] && cd $ORACLE_HOME/user_projects/domains/base_domain/bin && ./startWebLogic.sh) || (echo \"Domain base_domain does not exist.\")",
+        "commandLine":"([ -d /home/user/user_projects/domains/base_domain ] && cd /home/user/user_projects/domains/base_domain/bin && ./startWebLogic.sh) || (echo \"Domain base_domain does not exist.\")",
         "name":"Weblogic :: start",
         "attributes":{
           "previewUrl":"http://${server.port.7001}"
@@ -37,7 +37,7 @@
         "type":"custom"
       },
       {
-        "commandLine":"([ -d $ORACLE_HOME/user_projects/domains/base_domain ] && cd $ORACLE_HOME/user_projects/domains/base_domain/bin && ./stopWebLogic.sh) || (echo \"Domain base_domain does not exist.\")",
+        "commandLine":"([ -d /home/user/user_projects/domains/base_domain ] && cd /home/user/user_projects/domains/base_domain/bin && ./stopWebLogic.sh) || (echo \"Domain base_domain does not exist.\")",
         "name":"Weblogic :: stop",
         "attributes":{
           "previewUrl":""
@@ -45,8 +45,8 @@
         "type":"custom"
       },
       {
-        "commandLine":"cd $ORACLE_HOME/oracle_common/common/bin && ./config.sh -mode=console",
-        "name":"Weblogic :: create domain (interactive)",
+        "commandLine":"cd $ORACLE_HOME/oracle_common/common/bin && ./wlst.sh -skipWLSModuleScanning /home/user/create-wls-domain.py && mkdir -p /home/user/user_projects/domains/base_domain/servers/AdminServer/security && echo \"username=weblogic\" > /home/user/user_projects/domains/base_domain/servers/AdminServer/security/boot.properties && echo \"password=$ADMIN_PASSWORD\" >> /home/user/user_projects/domains/base_domain/servers/AdminServer/security/boot.properties",
+        "name":"Weblogic :: create domain",
         "attributes":{
           "previewUrl":""
         },
