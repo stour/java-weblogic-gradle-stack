@@ -6,7 +6,7 @@ ENV JAVA_HOME /opt/jdk1.8.0_65
 
 ENV FMW_PKG=fmw_12.2.1.0.0_wls_Disk1_1of1.zip \
     FMW_JAR=fmw_12.2.1.0.0_wls.jar \
-    ORACLE_HOME=/home/user/ \
+    ORACLE_HOME=/home/user/weblogic \
     USER_MEM_ARGS="-Djava.security.egd=file:/dev/./urandom" \
     PATH=$PATH:/usr/java/default/bin:/u01/oracle/oracle_common/common/bin
 
@@ -75,13 +75,10 @@ COPY $SILENT_XML install.file oraInst.loc /home/user/
 
 # Install Weblogic
 # -------------------------------------
-RUN cd /home/user && jar xf /home/user/$FMW_PKG && cd - && \
+RUN cd /home/user/ && jar xf /home/user/$FMW_PKG && \
+    mkdir /home/user/weblogic && cd /home/user/weblogic && \
     java -jar /home/user/$FMW_JAR -silent -responseFile /home/user/install.file -invPtrLoc /home/user/oraInst.loc -jreLoc $JAVA_HOME -ignoreSysPrereqs -force -novalidation ORACLE_HOME=$ORACLE_HOME INSTALL_TYPE="WebLogic Server" && \
     rm /home/user/$FMW_JAR /home/user/$FMW_PKG /home/user/oraInst.loc /home/user/install.file
-
-# Set Weblogic environment
-# -------------------------------------
-RUN cd $MW_HOME/wlserver/server/bin && ./setWLSEnv.sh
 
 # Cache Maven dependencies of a given project (EXAMPLE with console-java-simple)
 # ------------------------------------------------------------------------------
